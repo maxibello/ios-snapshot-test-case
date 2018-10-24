@@ -10,6 +10,7 @@
 #import <FBSnapshotTestCase/FBSnapshotTestCasePlatform.h>
 #import <FBSnapshotTestCase/UIApplication+StrictKeyWindow.h>
 #import <UIKit/UIKit.h>
+#import <sys/utsname.h>
 
 BOOL FBSnapshotTestCaseIs64Bit(void)
 {
@@ -42,7 +43,7 @@ NSString *FBDeviceAgnosticNormalizedFileName(NSString *fileName)
         NSString *screenWidth = NSProcessInfo.processInfo.environment[@"SIMULATOR_MAINSCREEN_WIDTH"];
         NSString *screenHeight = NSProcessInfo.processInfo.environment[@"SIMULATOR_MAINSCREEN_HEIGHT"];
     
-        fileName = [NSString stringWithFormat:@"%@_%@_%@_%@x%@", fileName, deviceName, os, screenWidth, screenHeight];
+        fileName = [NSString stringWithFormat:@"%@_%@_%@x%@", fileName, deviceName, screenWidth, screenHeight];
     #else
         struct utsname systemInfo;
         NSString *model = [NSString stringWithCString:systemInfo.machine
