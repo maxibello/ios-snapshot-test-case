@@ -12,23 +12,10 @@
 #import <UIKit/UIKit.h>
 #import <sys/utsname.h>
 
-BOOL FBSnapshotTestCaseIs64Bit(void)
-{
-#if __LP64__
-  return YES;
-#else
-  return NO;
-#endif
-}
-
 NSOrderedSet *FBSnapshotTestCaseDefaultSuffixes(void)
 {
   NSMutableOrderedSet *suffixesSet = [[NSMutableOrderedSet alloc] init];
-  [suffixesSet addObject:@"_32"];
   [suffixesSet addObject:@"_64"];
-  if (FBSnapshotTestCaseIs64Bit()) {
-    return [suffixesSet reversedOrderedSet];
-  } 
   return [suffixesSet copy];
 }
 
