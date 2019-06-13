@@ -223,9 +223,9 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
         return NO;
     }
 
-    NSLog(@"If you have Kaleidoscope installed you can run this command to see an image diff:\n"
-          @"ksdiff \"%@\" \"%@\"",
-          referencePath, testPath);
+//    NSLog(@"If you have Kaleidoscope installed you can run this command to see an image diff:\n"
+//          @"ksdiff \"%@\" \"%@\"",
+//          referencePath, testPath);
 
     return YES;
 }
@@ -303,7 +303,7 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
         if (!imagesSame) {
             NSError *saveError = nil;
             if ([self saveFailedReferenceImage:referenceImage testImage:snapshot selector:selector identifier:identifier error:&saveError] == NO) {
-                NSLog(@"Error saving test images: %@", saveError);
+//                NSLog(@"Error saving test images: %@", saveError);
             }
         }
         return imagesSame;
@@ -343,7 +343,7 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
             }
             didWrite = [pngData writeToFile:filePath options:NSDataWritingAtomic error:errorPtr];
             if (didWrite) {
-                NSLog(@"Reference image save at: %@", filePath);
+//                NSLog(@"Reference image save at: %@", filePath);
             }
         } else {
             if (nil != errorPtr) {
