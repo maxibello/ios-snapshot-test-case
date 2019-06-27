@@ -30,20 +30,35 @@ NSOrderedSet *FBSnapshotTestCaseDefaultSuffixes(void)
 
 NSString *FBFileNameIncludeNormalizedFileNameFromOption(NSString *fileName, FBSnapshotTestCaseFileNameIncludeOption option)
 {
-    if ((option & FBSnapshotTestCaseFileNameIncludeOptionDevice) == FBSnapshotTestCaseFileNameIncludeOptionDevice) {
-        UIDevice *device = [UIDevice currentDevice];
-        fileName = [fileName stringByAppendingFormat:@"_%@", device.model];
-    }
-
-    if ((option & FBSnapshotTestCaseFileNameIncludeOptionOS) == FBSnapshotTestCaseFileNameIncludeOptionOS) {
-        UIDevice *device = [UIDevice currentDevice];
-        NSString *os = device.systemVersion;
-        fileName = [fileName stringByAppendingFormat:@"_%@", os];
-    }
-
-    if ((option & FBSnapshotTestCaseFileNameIncludeOptionScreenSize) == FBSnapshotTestCaseFileNameIncludeOptionScreenSize) {
-        CGSize screenSize = [UIScreen mainScreen].bounds.size;
-        fileName = [fileName stringByAppendingFormat:@"_%.0fx%.0f", screenSize.width, screenSize.height];
+    if (getenv("IS_UI_TESTING")) {
+        #if TARGET_IPHONE_SIMULATOR
+                NSString *deviceName = NSProcessInfo.processInfo.environment[@"SIMULATOR_DEVICE_NAME"];
+                NSString *screenWidth = NSProcessInfo.processInfo.environment[@"SIMULATOR_MAINSCREEN_WIDTH"];
+                NSString *screenHeight = NSProcessInfo.processInfo.environment[@"SIMULATOR_MAINSCREEN_HEIGHT"];
+        
+                fileName = [NSString stringWithFormat:@"%@_%@_%@x%@", fileName, deviceName, screenWidth, screenHeight];
+        #else
+                struct utsname systemInfo;
+                NSString *model = [NSString stringWithCString:systemInfo.machine
+                                                     encoding:NSUTF8StringEncoding];
+                fileName = [NSString stringWithFormat:@"%@_%@_%@", fileName, model, os];
+        #endif
+    } else {
+        if ((option & FBSnapshotTestCaseFileNameIncludeOptionDevice) == FBSnapshotTestCaseFileNameIncludeOptionDevice) {
+            UIDevice *device = [UIDevice currentDevice];
+            fileName = [fileName stringByAppendingFormat:@"_%@", device.model];
+        }
+        
+        if ((option & FBSnapshotTestCaseFileNameIncludeOptionOS) == FBSnapshotTestCaseFileNameIncludeOptionOS) {
+            UIDevice *device = [UIDevice currentDevice];
+            NSString *os = device.systemVersion;
+            fileName = [fileName stringByAppendingFormat:@"_%@", os];
+        }
+        
+        if ((option & FBSnapshotTestCaseFileNameIncludeOptionScreenSize) == FBSnapshotTestCaseFileNameIncludeOptionScreenSize) {
+            CGSize screenSize = [UIScreen mainScreen].bounds.size;
+            fileName = [fileName stringByAppendingFormat:@"_%.0fx%.0f", screenSize.width, screenSize.height];
+        }
     }
 
     NSMutableCharacterSet *invalidCharacters = [NSMutableCharacterSet new];
